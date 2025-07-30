@@ -1,33 +1,56 @@
 pipeline {
-    agent any
-
+    agent {
+        label 'built-in'
+    }
+    environment {
+        GIT_REPO = 'https://github.com/Aniruddha-22-git/calculator.git'
+        CLONE_DIR = '/mnt/hello'
+    }
     stages {
-        stage('Install Apache2 and Deploy HTML') {
+        stage('Prepare Workspace') {
             steps {
                 sh '''
-                    # Update and install Apache2
-                    sudo apt update
-                    sudo apt install apache2 -y
-
-                    # Start and enable Apache
-                    sudo systemctl start apache2
-                    sudo systemctl enable apache2
-
-                    # Copy your HTML file to Apache's root
-                    echo "<html><body><h1>Deployed from Jenkins</h1></body></html>" > calculator.html
-                    sudo cp calculator.html /var/www/html/
-
-                    # Set permissions
-                    sudo chmod 644 /var/www/html/calculator.html
+                sudo rm -rf ${CLONE_DIR}
+                mkdir -p ${CLONE_DIR}
                 '''
             }
         }
-
-        stage('Verify') {
+        stage('Clone Repository') {
             steps {
-                echo 'Access the site via http://<your-ip>/calculator.html'
+                dir("${CLONE_DIR}") {
+                    sh '''
+                    git clone ${GIT_REPO} .
+                    '''
+                }
+            }
+        }
+        stage('Install Apache2') {
+            steps {
+                sh '''
+                sudo apt update
+                sudo apt install apache2 -y
+                sudo systemctl enable apache2
+                sudo systemctl start apache2
+                '''
+            }
+        }
+        stage('Deploy HTML to Apache') {
+            steps {
+                sh '''
+                sudo cp ${CLONE_DIR}/calculator.html /var/www/html/
+                sudo chmod 644 /var/www/html/calculator.html
+                '''
             }
         }
     }
+    post {
+        success {
+            echo "✅ HTML deployed! Access it at: http://<your-server-ip>/calculator.html"
+        }
+        failure {
+            echo "❌ Deployment failed. Check logs."
+        }
+    }
 }
+
 

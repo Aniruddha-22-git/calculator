@@ -11,8 +11,14 @@ steps {
   sh "cd /mnt/hello"
   //sh "git clone https://github.com/Aniruddha-22-git/calculator.git "
   //sh "apt-get install apache2 -y "
-  sh "systemctl  start apache2"
-  //sh "cd /mnt"
+  //sh "systemctl  start apache2"
+  sh '''
+sudo apt update
+sudo apt install apache2 -y
+sudo systemctl start apache2
+'''
+
+        //sh "cd /mnt"
   //sh "mkdir calci"
   //sh "git clone https://github.com/Aniruddha-22-git/calculator.git /mnt/calci/"
   sh "cp -r calculator.html /var/www/html"

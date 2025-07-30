@@ -1,19 +1,20 @@
 pipeline{
   agent{
-    label('built-in')
+    label "built-in"
+    customWorkspace "/mnt/hello"
   }
   stages{
-    stage('game'){
+    stage('server'){
 steps {
-  sh "cd /mnt"
-  sh "git clone https://github.com/Aniruddha-22-git/calculator.git "
- //sh "yum install httpd -y "
-  //sh "service httpd start"
+  sh "cd /mnt/hello"
+  //sh "git clone https://github.com/Aniruddha-22-git/calculator.git "
+  sh "apt install apache2 -y "
+  sh "systemctl  start apache2"
   //sh "cd /mnt"
   //sh "mkdir calci"
   //sh "git clone https://github.com/Aniruddha-22-git/calculator.git /mnt/calci/"
-  //sh "cp -r /mnt/calci/calculator/calculator.html /var/www/html"
-  //sh "chmod -R 777 /var/www/html/calculator.html "
+  sh "cp -r calculator.html /var/www/html"
+  sh "chmod -R 777 /var/www/html/calculator.html "
   
  
 }      

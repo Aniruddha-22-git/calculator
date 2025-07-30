@@ -10,7 +10,7 @@ label{
 steps {
   sh "cd /mnt/hello"
   //sh "git clone https://github.com/Aniruddha-22-git/calculator.git "
-  sh "apt install apache2 -y "
+  sh "apt-get install apache2 -y "
   sh "systemctl  start apache2"
   //sh "cd /mnt"
   //sh "mkdir calci"
